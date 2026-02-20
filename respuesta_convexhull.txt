@@ -1,0 +1,44 @@
+Estoy empezando con estos temas, así que lo explico con palabras sencillas.
+
+1 -. Cómo funciona a alto nivel (la idea de envolver los puntos):
+
+Imagina que tienes un montón puntos tablita. Si pasas una cuerda alrededor de todos los puntos y la estiras, 
+la cuerda quedará ajustada alrededor de los puntos exteriores: eso es la envolvente convexa.
+
+El algoritmo que usamos Jarvis hace algo parecido pero con pasos discretos:
+Primero busca el punto más a la izquierda (ese siempre está en la envolvente)
+
+Desde ese punto mira todos los demás puntos y elige el que haga el giro más hacia la izquierda relativo 
+al punto actual (es decir, el que esté más afuera) En geométricamente se usa el producto cruz para saber si
+un punto está a la izquierda o a la derecha de la dirección actual
+
+Repite: mueve el punto actual al escogido y vuelve a buscar el siguiente que sea el más “externo”.
+
+Cuando regresas al punto inicial ya cerraste la cuerda y tienes la envolvente.
+
+Una aclaración práctica: si varios puntos están exactamente en la misma línea (colineales) con el borde, el 
+algoritmo suele quedarse con el que esté más lejos del punto actual, así la envolvente queda por fuera y no
+“se dobla” hacia adentro.
+
+2 -. Complejidad temporal esperada:
+
+A alto nivel la complejidad es O(n * h), donde n es el número total de puntos y h es el número de vértices
+ de la envolvente
+
+En el peor caso (por ejemplo, si casi todos los puntos están en la frontera), h puede ser aproximadamente
+ n, y la complejidad se vuelve O(n^2).
+
+Explicación corta: por cada vértice de la envolvente (h veces) el algoritmo examina todos los n puntos para
+ decidir cuál es el siguiente, de ahí el producto n*h.
+
+3 -. Dificultades que encontré y cómo las resolví:
+
+La colinealidad al principio no supe qué hacer cuando varios puntos quedaban en la misma dirección si escoges
+cualquiera, la envolvente puede quedar mal (o con puntos interiores). Lo resolví comparando distancias y escogiendo
+el punto más lejano cuando la orientación daba cero.
+
+En la Precisión numérica con puntos con coordenadas muy cercanas, el valor del producto cruz puede ser casi cero por
+errores de punto flotante. Para mitigarlo, se puede usar una pequeña tolerancia (por ejemplo, comparar |cross| < 1e-12) 
+antes de declararlo exactamente colineal en mi código inicial aún no puse tolerancias muy finas, pero supe por pruebas que ayudan
+
+en la integración gráfica no tenía mucha práctica con matplotlib+tkinter; la parte más tediosa intente adaptarlo a pandas pero fue un fracaso
